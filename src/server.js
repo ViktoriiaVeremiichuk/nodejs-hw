@@ -5,6 +5,8 @@ import 'dotenv/config';
 
 const app = express();
 
+const PORT = process.env.PORT || 3000;
+
 app.use(express.json());
 app.use(cors());
 
@@ -25,9 +27,12 @@ app.use(
   }),
 );
 
-app.get('/test-error', (req, res) => {
-  // Штучна помилка для прикладу
-  throw new Error('Simulated server error');
+app.get('/test-error', (req, res, next) => {
+  try {
+    throw new Error('Simulated server error');
+  } catch (err) {
+    next(err);
+  }
 });
 
 app.get('/notes', (req, res) => {
@@ -59,5 +64,5 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(process.env.PORT, () => {
-  console.log('Server is running on localhost:3000');
+  console.log(`Server is running on localhost: ${PORT}`);
 });
