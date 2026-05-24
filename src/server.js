@@ -6,7 +6,9 @@ import { notFoundHandler } from './middleware/notFoundHandler.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { logger } from './middleware/logger.js';
 import notesRoutes from "./routes/notesRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
 import { errors } from 'celebrate';
+import cookieParser from 'cookie-parser';
 
 const app = express();
 
@@ -20,9 +22,10 @@ app.use(
 );
 
 app.use(logger);
-
+app.use(cookieParser());
 
 app.use(notesRoutes);
+app.use(authRoutes);
 
 app.use(notFoundHandler);
 app.use(errors());
