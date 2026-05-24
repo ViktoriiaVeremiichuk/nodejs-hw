@@ -31,7 +31,7 @@ export const loginUser = async (req, res) => {
     throw createHttpError(401, 'Invalid credentials');
   }
 
-  const isValidPassword = await bcrypt.compare(req.body, user.password);
+  const isValidPassword = await bcrypt.compare(req.body.password, user.password);
 
   if (!isValidPassword) {
     throw createHttpError(401, 'Invalid credentials');
@@ -46,10 +46,10 @@ export const loginUser = async (req, res) => {
 
 export const logoutUser = async (req, res) => {
   if (req.cookies.sessionId) {
-    await Session.deleteOne({ id: req.cookies.sessionId });
-    res.clearCoolie('accessToken');
-    res.clearCoolie('refreshToken');
-    res.clearCoolie('sessionId');
+    await Session.deleteOne({ _id: req.cookies.sessionId });
+    res.clearCookie('accessToken');
+    res.clearCookie('refreshToken');
+    res.clearCookie('sessionId');
   }
 
   res.status(204).send();
@@ -75,9 +75,9 @@ export const refreshUserSession = async (req, res) => {
 
   if (isRefreshTokenExpired) {
     await session.deleteOne();
-    res.clearCoolie('accessToken');
-    res.clearCoolie('refreshToken');
-    res.clearCoolie('sessionId');
+    res.clearCookie('accessToken');
+    res.clearCookie('refreshToken');
+    res.clearCookie('sessionId');
     throw createHttpError(401, 'Session token expired');
   }
 
